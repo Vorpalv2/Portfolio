@@ -25,7 +25,6 @@ export default function DynamicBlogDataFetcher({
   children: React.ReactNode;
 }) {
   const [posts, setPosts] = useState<SanityDocument[]>([]);
-  console.log(posts);
 
   const [loading, setLoading] = useState(false);
   const ref = useRef(null);
