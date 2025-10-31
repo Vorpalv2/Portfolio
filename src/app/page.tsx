@@ -1,65 +1,96 @@
-import Image from "next/image";
+import BackButton from "@/components/BackButton";
+import UnicornScene from "unicornstudio-react/next";
 
-export default function Home() {
+const ExternalLinkIcon = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth="1.5"
+    stroke="currentColor"
+    className="w-4 h-4"
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"
+    />
+  </svg>
+);
+
+const Homepage = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="fixed inset-0 w-full h-screen overflow-hidden bg-white">
+      {/* Name and Contact Links (Top Left) */}
+      <div className="absolute top-4 left-4 z-50 text-black">
+        <span className="text-2xl">Aakash</span>
+        <ul className="mt-2 space-y-1 text-base">
+          <li>
+            <a
+              href="mailto:vorpalv2@yahoo.com"
+              className="flex items-center gap-1 hover:underline"
+            >
+              Email
+              <ExternalLinkIcon />
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/Vorpalv2"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 hover:underline"
+            >
+              GitHub
+              <ExternalLinkIcon />
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.linkedin.com/in/vorpalv2/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 hover:underline"
+            >
+              LinkedIn
+              <ExternalLinkIcon />
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      {/* "Open Portfolio" Button (Top Right - Desktop) */}
+      <div className="absolute top-4 right-4 md:block hidden z-50">
+        <BackButton buttonName="Open Portfolio" href="/portfolio" />
+      </div>
+
+      {/* "Open Portfolio" Button (Center - Mobile) */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:hidden z-50">
+        <BackButton buttonName="Open Portfolio" href="/portfolio" />
+      </div>
+      <div
+        className="hidden md:block overflow-hidden"
+        data-us-project="ZVUjFol3aD7LWcWetCCU"
+        style={{
+          width: "100%",
+          height: "70vh",
+          transform: "translateY(40px)",
+          // CSS properties are camelCase in React style objects
+          clipPath: "inset(0 0 20% 0)",
+        }}
+        data-us-initialized="true"
+        data-scene-id="id-gvj9uaklfhs70ak62ul15t"
+      >
+        <UnicornScene
+          projectId="ZVUjFol3aD7LWcWetCCU"
+          height={"70vh"}
+          width={"100%"}
+          className="pt-100px mt-100px"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
     </div>
   );
-}
+};
+
+export default Homepage;
