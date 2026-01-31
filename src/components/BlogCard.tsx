@@ -1,6 +1,7 @@
 import { usePostContext } from "@/utils/PostsContext";
 import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
+import Link from "next/link";
 
 const builder = imageUrlBuilder(client);
 const urlFor = (source: any) => builder.image(source);
@@ -18,11 +19,13 @@ export default function BlogCard() {
   return posts.map((post) => (
     <div
       key={post._id}
-      className="selection:bg-black my-4 selection:text-white bg-gray-50 border border-gray-200 rounded-3xl p-4 max-w-[450px]"
+      // <--- Add this
+      className="selection:bg-black my-4 transit selection:text-white bg-gray-50 border border-gray-200 rounded-3xl p-4 max-w-[450px]"
     >
       <div className="flex gap-4">
         <img
-          className="w-24 h-24 rounded-2xl object-cover shrink-0"
+          className="w-24 h-24 rounded-2xl object-cover shrink-0 transit-image"
+          style={{ viewTransitionName: `image-${post._id}` }}
           src={
             post.mainImage
               ? urlFor(post.mainImage).width(96).height(96).url()
@@ -33,7 +36,12 @@ export default function BlogCard() {
 
         <div className="space-y-3 flex-1">
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-medium text-black">{post.title}</h2>
+            <h2
+              className="text-sm font-medium text-black"
+              style={{ viewTransitionName: `desc-${post.title}` }}
+            >
+              {post.title}
+            </h2>
             <span className="text-sm font-medium text-black">•</span>
             <span className="text-sm text-gray-600">
               {post.publishedAt
@@ -58,12 +66,12 @@ export default function BlogCard() {
                 <Flag FlagName="Uncategorized" />
               )}
             </div>
-            <a
+            <Link
               className="text-xs cursor-pointer text-blue-900 hover:underline transition-colors"
               href={`/blogs/${post.slug.current}`}
             >
               Read more
-            </a>
+            </Link>
           </div>
         </div>
       </div>

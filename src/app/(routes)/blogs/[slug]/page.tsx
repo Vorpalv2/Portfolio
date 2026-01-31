@@ -4,6 +4,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { client } from "@/sanity/client";
 import BackButton from "@/components/BackButton";
 import { Metadata } from "next";
+import ViewTransitionWrapper from "./ViewTransitionWrapper";
 
 const { dataset, projectId } = client.config();
 
@@ -28,7 +29,7 @@ export async function generateMetadata({
   const post = await client.fetch<SanityDocument & { description: string }>(
     METADATA_QUERY,
     { slug },
-    options
+    options,
   );
 
   if (!post) {
@@ -52,6 +53,7 @@ export default async function BlogPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  console.log(slug);
 
   try {
     const POST_QUERY = `*[_type == "post" && slug.current == $slug][0] {
@@ -66,7 +68,7 @@ export default async function BlogPage({
     const post = await client.fetch<SanityDocument>(
       POST_QUERY,
       { slug },
-      options
+      options,
     );
 
     if (!post) {
@@ -79,44 +81,56 @@ export default async function BlogPage({
 
     // author is now dereferenced inside the post query as post.author.name
 
+    function HandleBackButton() {}
+
     return (
       <>
-        <div className="flex justify-end bg-black w-full">
-          <BackButton href="/portfolio" buttonName="Go Back" />
-        </div>
-        <article className="min-h-screen bg-white text-black">
-          <div className="w-full h-96 overflow-hidden">
-            <img
-              src={postImageUrl || "/placeholder.svg"}
-              alt={post.title}
-              className="w-full h-full object-cover rounded-b-2xl blur-xs"
-            />
-          </div>
-          <div className="max-w-3xl mx-auto px-6 py-12">
-            {/* Header Section */}
-            <header className="mb-8">
-              <h1 className="text-4xl font-bold mb-4 text-pretty">
-                {post.title}
-              </h1>
-
-              {/* Meta Information */}
-              <div className="flex flex-col gap-2 text-gray-700 border-b border-gray-300 pb-6">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">
-                    By {post.author?.name ?? "Unknown"}
-                  </span>
-                </div>
+        <ViewTransitionWrapper>
+          <div className="transit">
+            <div className="flex justify-end bg-black w-full">
+              <BackButton href="/portfolio" buttonName="Go Back" />
+            </div>
+            <article className="min-h-screen sm:flex sm:mt-20 bg-white text-black">
+              <div className="w-[400px] h-[210px] overflow-hidden sm:ml-4">
+                <img
+                  style={{ viewTransitionName: `image-${post._id}` }}
+                  src={postImageUrl || "/placeholder.svg"}
+                  alt={post.title}
+                  className="w-[400px] h-[210px] transit-image sm:fixed object-fill rounded-2xl"
+                />
               </div>
-            </header>
+              <div className="max-w-3xl mx-auto px-6 py-12">
+                {/* Header Section */}
+                <header className="mb-8">
+                  <h1
+                    className="text-4xl font-bold mb-4 text-pretty"
+                    style={{ viewTransitionName: `desc-${post.title}` }}
+                  >
+                    {post.title}
+                  </h1>
 
-            <main className="prose prose-invert max-w-none">
-              <div className="text-lg leading-relaxed whitespace-pre-wrap text-black">
-                {Array.isArray(post.body) && <PortableText value={post.body} />}
+                  {/* Meta Information */}
+                  <div className="flex flex-col gap-2 text-gray-700 border-b border-gray-300 pb-6">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">
+                        By {post.author?.name ?? "Unknown"}
+                      </span>
+                    </div>
+                  </div>
+                </header>
+
+                <main className="prose prose-invert max-w-none">
+                  <div className="text-lg leading-relaxed whitespace-pre-wrap text-black">
+                    {Array.isArray(post.body) && (
+                      <PortableText value={post.body} />
+                    )}
+                  </div>
+                </main>
+                <div className="sr-only">Post ID: {post._id}</div>
               </div>
-            </main>
-            <div className="sr-only">Post ID: {post._id}</div>
+            </article>
           </div>
-        </article>
+        </ViewTransitionWrapper>
       </>
     );
   } catch (error) {
